@@ -1,4 +1,4 @@
-# phpspellchecker
+# PHPSpellChecker
  
 With this tool you can scan complete web sites (projects) and check it for typos and misspellings. You will receive a detailed report of all found misspellings. You can create your own custom dictionaries to maintain domain specific words.
 Start with creating a project. Give it a name and provide the URL of the sitemap. It will tell PHPSpellChecker which URLs to scan. You can also set an optional limit of a maximum number of pages to be checked and a delay between scanning of pages.
