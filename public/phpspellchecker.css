@@ -1,0 +1,50 @@
+@charset "ISO-8859-1";
+
+/*--------------------------------------------------------------------------------------*/
+ 
+@import url("/psc_mobile.css") screen and (max-width:1024px);
+@import url("/psc_desktop.css") screen and (min-width:1025px);
+
+/*--------------------------------------------------------------------------------------*/
+
+@font-face 
+{
+	  font-family: 'vercetti';
+	  src: local('vercetti'),
+	       url('/Vercetti-Regular.woff2') format('woff2');
+}
+
+html{color:black;background:white;text-size-adjust: none; -webkit-text-size-adjust: none;}
+.home,.dsgvo,h1,h2,h3,h4,h5,nav,.footer_menu{font-family:vercetti,clean,sans-serif;}
+.home{font-weight:normal;color:black}
+h1,h2,h3,h4,h5{font-weight:bold;color:black}
+a{color:black;text-decoration-line:underline;white-space:nowrap}
+.contact{padding: 5px}
+.references{color:white;text-decoration-line:none;white-space:nowrap}
+   	      
+header 
+{
+	grid-column: 1 / 4;
+	grid-row:    1 / 2;		
+	background: white;
+}
+article 
+{
+	grid-column: 1 / 4;
+	grid-row:    2 / 3;		
+	background: white;
+	padding-top: 30px;
+	padding-bottom: 50px;
+}  	
+.nav_item{color:#16206a;text-decoration-line:none;}
+		
+select
+{
+	background: white;
+	border: 1px solid black;
+}  
+button
+{
+	background: white;
+	border: 1px solid black;
+}  
