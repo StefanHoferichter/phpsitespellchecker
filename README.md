@@ -10,3 +10,9 @@ Once you have created a project you can trigger a spellcheck run from the jobs p
     F - Failed
 
 Once a scan has reached status E and completion level of 100% you can dig into the found misspellings by clicking on the project name. You will see then all scanned pages and a preview of the found misspellings. When you click on the individual page URL you will see all misspellings. You can either fix the typo in your webproject or you can add a word to your custom dictionary. After adding a word to a dictionary you need to compile the dictionary, so that the PHPSpellChecker can consider your custom word entry. 
+
+## prerequisites
+
+PHPSpellChecker is a Laravel app. It requires PHP, Apache (or another web server), MariaDB.  
+It uses a package from Philippe SEGATORI (tigitz) php-spellchecker: https://github.com/tigitz/php-spellchecker
+It requires aspell. I have test it so far only under Debian, but other Linux distributions can be tested as well on demand.
