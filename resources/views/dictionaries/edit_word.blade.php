@@ -1,4 +1,4 @@
-@extends('phpspellchecker')
+@extends('phpsitespellchecker')
 @section('submenu')
 @include ('dictionaries.include_dictionaries_menu')
 @endsection

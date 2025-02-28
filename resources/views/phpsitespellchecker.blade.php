@@ -17,7 +17,7 @@
     <meta property="og:type" content="article">
     <meta name="thumbnail" content="@yield('image')" />
     <meta name="google-adsense-account" content="ca-pub-5066242446416572">
-    <link rel="stylesheet" href="/phpspellchecker.css">
+    <link rel="stylesheet" href="/phpsitespellchecker.css">
 	<link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png">
@@ -25,7 +25,7 @@
   </head>
   <body>
         <nav>
-              <div class="nav_logo"><a  href="/"><img width="300px" src="/images/logo/PhpSpellChecker_v3.png"></a></div>
+              <div class="nav_logo"><a  href="/"><img width="350px" src="/images/logo/PhpSiteSpellChecker_v4.png"></a></div>
               <div class="nav_jobs"><a  class="nav_item"  href="/jobs">Jobs</a></div>
               <div class="nav_projects"><a  class="nav_item"  href="/show_projects">Projects</a></div>
               <div class="nav_dict"><a  class="nav_item"  href="/show_dictionaries">Dictionaries</a></div>
