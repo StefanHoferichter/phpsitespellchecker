@@ -3,7 +3,7 @@
 return [
 
 
-    'folder' => env('DICT_FOLDER', '/var/www/html/rezeptexperte/dict'),
+    'folder' => env('DICT_FOLDER', '/var/www/html/phpsitespellchecker/dict'),
 
 
 ];
