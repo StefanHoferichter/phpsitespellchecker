@@ -31,3 +31,4 @@ Route::post('/save_word', 'App\Http\Controllers\DictionariesController@saveWord'
 Route::get('/compile_dictionary', 'App\Http\Controllers\DictionariesController@exportCustomDict');
 Route::get('/add_word_to_dict/{id}/{page_id}', 'App\Http\Controllers\DictionariesController@addWordToDict');
 Route::get('/add_word_to_ignored/{id}/{page_id}', 'App\Http\Controllers\DictionariesController@addWordToIgnored');
+Route::get('/add_message_to_ignored/{message}/{page_id}', 'App\Http\Controllers\DictionariesController@addMessageToIgnored');
