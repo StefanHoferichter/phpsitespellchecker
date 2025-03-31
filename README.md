@@ -21,5 +21,10 @@ Once a scan has reached status E and completion level of 100% you can dig into t
 PHPSiteSpellChecker is a Laravel app. 
 * It requires PHP 8.3, Laravel 12, Composer, Apache 2 (or another web server) and MariaDB 10.  
 * It uses a package from Philippe SEGATORI (tigitz) php-spellchecker: https://github.com/tigitz/php-spellchecker
-* It requires aspell. There is currently no active Windows port for aspell, so it limits PHPSiteSpellChecker to Linux. I have test it so far only under Debian 12, but other Linux distributions can be tested as well on demand. Aspell is part of the Debian distribution
+* It requires aspell. There is currently no active Windows port for aspell, so it limits PHPSiteSpellChecker to Linux. I have test it so far only under Debian 12, but other Linux distributions can be tested as well on demand. Aspell is part of the Debian distribution.
+* It requires LanguageTool V6.6. 
 * It uses Laravel queues and workers. Supervisor is recommended to keep the worker process running. Supervisor is part of the Debian distribution
+
+# Installation
+
+The installation guide can be found at: https://www.hoferichter.net/en/psss/phpsitespellchecker.php
