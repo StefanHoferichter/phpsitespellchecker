@@ -21,6 +21,8 @@ h1,h2,h3,h4,h5{font-weight:bold;color:black}
 a{color:black;text-decoration-line:underline;white-space:nowrap}
 .contact{padding: 5px}
 .references{color:white;text-decoration-line:none;white-space:nowrap}
+.evenrow{background:#d9e9fa}
+.tableheader{font-weight: bold;}
    	      
 header 
 {
