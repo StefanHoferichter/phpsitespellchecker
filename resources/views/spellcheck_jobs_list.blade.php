@@ -67,9 +67,14 @@
         <br>
         <br>
         <table>
-           <tr><td>Job ID</td><td>Sitemap</td><td>Status</td><td>Pages</td><td>Faulty Pages</td><td>Misspellings</td><td>Started</td><td>Duration</td><td>Completion</td></tr>
+           <tr  class="tableheader"><td>Job ID</td><td>Sitemap</td><td>Status</td><td>Pages</td><td>Faulty Pages</td><td>Misspellings</td><td>Started</td><td>Duration</td><td>Completion</td></tr>
             @foreach($jobs as $job) 
-              <tr><td><a href="/show_job_detail/{{$job->job_id}}">{{ $job->job_id }}</a></td><td><a href="/show_job_detail/{{$job->job_id}}">{{ $job->title }}</a></td><td><a id="status_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->status }}</a></td><td><a id="pages_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->pages }}</a></td><td><a  id="faulty_pages_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->faulty_pages }}</a></td><td><a id="misspellings_{{$job->job_id}}"  href="/show_job_detail/{{$job->job_id}}">{{ $job->misspellings }}</a></td><td>{{ $job->created_at }}</td><td id="duration_{{$job->job_id}}" >{{ $job->duration }}</td><td id="completion_{{$job->job_id}}" >{{ $job->completion }}%</td><td><a href="/delete_job/{{$job->job_id}}">delete</a></td></tr>
+              @if ($loop->index % 2 == 0)
+              	<tr class="evenrow">
+              @else
+              	<tr>
+              @endif	
+			  <td><a href="/show_job_detail/{{$job->job_id}}">{{ $job->job_id }}</a></td><td><a href="/show_job_detail/{{$job->job_id}}">{{ $job->title }}</a></td><td><a id="status_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->status }}</a></td><td><a id="pages_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->pages }}</a></td><td><a  id="faulty_pages_{{$job->job_id}}" href="/show_job_detail/{{$job->job_id}}">{{ $job->faulty_pages }}</a></td><td><a id="misspellings_{{$job->job_id}}"  href="/show_job_detail/{{$job->job_id}}">{{ $job->misspellings }}</a></td><td>{{ $job->created_at }}</td><td id="duration_{{$job->job_id}}" >{{ $job->duration }}</td><td id="completion_{{$job->job_id}}" >{{ $job->completion }}%</td><td><a href="/delete_job/{{$job->job_id}}">delete</a></td></tr>
             @endforeach
         </table>
         

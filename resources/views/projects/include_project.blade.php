@@ -10,7 +10,12 @@
               <option value="{{$language->id}}" @if ($language->id === $project->language_id) selected="true" @endif>{{ $language->long_name }}</option>
             @endforeach
               </select></td></tr>
-             
+             <tr><td>Tool:</td><td><select name="tool_id" id="tool_id">
+            @foreach($tools as $tool) 
+              <option value="{{$tool->id}}" @if ($tool->id === $project->tool_id) selected="true" @endif>{{ $tool->name }}</option>
+            @endforeach
+            </select></td>
+              </tr>
              
              <tr><td><input class="" type="hidden" name="id" value="{{ $project->id }}"></td><td><button dusk="project_submit" type="submit">Save</button></td></tr>
    			</table>

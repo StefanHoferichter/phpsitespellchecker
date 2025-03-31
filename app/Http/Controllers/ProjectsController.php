@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SpellcheckBackgroundJob;
 use App\Models\Language;
 use App\Models\Project;
+use App\Models\Tool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Process;
 
  
 class ProjectsController extends Controller
 {
      public function showProjects()
     {
-        $projects =  DB::select('select p.id, p.title, p.sitemap, p.language_id, l.long_name, p.max_pages, p.delay_ms from projects p, languages l where p.language_id = l.id');
+        $projects =  DB::select('select p.id, p.title, p.sitemap, p.language_id, l.long_name, p.max_pages, p.delay_ms, t.name tool from projects p, languages l, tools t where p.tool_id=t.id and p.language_id = l.id');
         
         return view('projects.projects_list', ['projects' => $projects]);
     }
@@ -24,8 +22,9 @@ class ProjectsController extends Controller
     {
         $project = new Project;
         $languages= Language::all();
+        $tools= Tool::all();
         
-        return view('projects.add_project', ['project' => $project, 'languages' => $languages]);
+        return view('projects.add_project', ['project' => $project, 'languages' => $languages, 'tools' => $tools]);
     }
     public function addProject(Request $request)
     {
@@ -39,8 +38,9 @@ class ProjectsController extends Controller
     {
         $project = Project::find($id);
         $languages= Language::all();
+        $tools= Tool::all();
         
-        return view('projects.edit_project', ['project' => $project, 'languages' => $languages]);
+        return view('projects.edit_project', ['project' => $project, 'languages' => $languages, 'tools' => $tools]);
     }
     public function saveProject(Request $request)
     {
@@ -64,6 +64,7 @@ class ProjectsController extends Controller
         $project->max_pages=$request->max_pages;
         $project->delay_ms=$request->delay_ms;
         $project->language_id=$request->language_id;
+        $project->tool_id=$request->tool_id;
     }
     
 }

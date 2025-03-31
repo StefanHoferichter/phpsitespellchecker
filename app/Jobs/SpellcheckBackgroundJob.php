@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\IgnoredLTMessage;
 use App\Models\IgnoredWord;
 use App\Models\Language;
 use App\Models\Misspelling;
@@ -12,6 +13,7 @@ use Carbon\Exceptions\Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
+use PhpSpellcheck\Misspelling as TMisspelling;
 use PhpSpellcheck\Spellchecker\Aspell;
 use ErrorException;
 
@@ -45,6 +47,8 @@ class SpellcheckBackgroundJob implements ShouldQueue
         $sc->status = "S";
         $sc->save();
         
+        $tool_id=$project->tool_id;
+        
         $xml = $this->retrieveURL($sitemap);
         if ($xml === false or $xml == null)
             $this->cancelRun($sc);
@@ -70,8 +74,12 @@ class SpellcheckBackgroundJob implements ShouldQueue
                 usleep($project->delay_ms*1000);
                 Log::info( "before html retrieval ");
                 $html = $this->retrieveURL($urls[$i]);
-                Log::info("before spellcheck");
-                $misspellings = $this->spellcheckURL($html, $language, $ignoredWords);
+                Log::info("before spellcheck " . $tool_id);
+                $str = $this->stripHTML($html, $ignoredWords);
+                if ($tool_id == 1)
+                    $misspellings = $this->spellcheckURL($str, $language);
+                else
+                    $misspellings = $this->grammarcheckURL($str, $language);
                 $html=null;
                 Log::info("after spellcheck");
                 $misspell_array = iterator_to_array($misspellings);
@@ -93,6 +101,8 @@ class SpellcheckBackgroundJob implements ShouldQueue
                             else if ($cnt < 6)
                                 $preview = $preview. " ".$misspelling->getWord();
                     }
+                    if (strlen($preview) > 255)
+                        $preview = substr($preview, 0, 255);
                     $page->preview = $preview;
                     $page->save();
                     Log::debug ("page id: " . $page->id . " page url " . $page->url);
@@ -104,6 +114,18 @@ class SpellcheckBackgroundJob implements ShouldQueue
                         $ms->word = $misspelling->getWord();
                         $ms->line = $misspelling->getLineNumber();
                         $ms->offset = $misspelling->getOffset();
+                        $message = $misspelling->getSuggestions();
+                        if (count($message) > 0)
+                            $ms->message = $message[0];
+                        else 
+                            $ms->message = "";
+                        $context = $misspelling->getContext();
+                        if (count($context) > 0)
+                            $ms->context = $context[0];
+                        else
+                            $ms->context = "";
+                        if ($tool_id == 1)
+                            $ms->context = $this->generateContext($str, $ms->offset, 30);
                         $ms->save();
                         $ms=null;
                     }
@@ -131,6 +153,40 @@ class SpellcheckBackgroundJob implements ShouldQueue
         Log::info('end handling spellcheck job');
     }
 
+    private function generateContext($str, $start, $length)
+    {
+        $origStart=$start;
+        $start = $start - $length;
+        if ($start < 0)
+            $start = 0;
+        $foundSpace=false;
+        while (!$foundSpace)
+        {
+            if (substr($str, $start, 1) == " ")
+                $foundSpace = true;
+                else
+                    $start--;
+                    
+            if ($start <= 0)
+                $foundSpace = true;
+        }
+        $foundSpace=false;
+        $length = $length + 50;
+        while (!$foundSpace)
+        {
+            if (substr($str, $origStart + $length, 1) == " ")
+                $foundSpace = true;
+                else
+                    $length++;
+                    
+            if ($length + $origStart >= strlen($str))
+                $foundSpace = true;
+        }
+        $word=substr($str, $start, $origStart-$start+$length);
+        
+        return $word;
+    }
+    
     private function cancelRun($sc)
     {
         Log::info("save end status");
@@ -197,12 +253,12 @@ class SpellcheckBackgroundJob implements ShouldQueue
         
         return $urls;
     }
-    
-    private function spellcheckURL($html, $language, $ignoredWords)
+
+    private function stripHTML($html, $ignoredWords)
     {
         $raw = $html."";
-        $aspell = Aspell::create();
-
+        
+        //remove javascript
         $loop=true;
         while ($loop)
         {
@@ -213,22 +269,128 @@ class SpellcheckBackgroundJob implements ShouldQueue
                 else
                     $loop=false;
         }
-        
-        $raw2 = htmlspecialchars_decode($raw);
+        //insert space between table cells
+        $raw2 = str_replace("</td>", " ", $raw);
+        // handle specific characters
+        $raw3 = htmlspecialchars_decode($raw2);
         
         foreach($ignoredWords as $ignore)
         {
             Log::debug("ignore: ". $ignore->name . "!");
-            $raw2 = str_replace($ignore->name, "", $raw2);
+            $raw3 = str_replace($ignore->name, "", $raw3);
         }
-        $str = strip_tags($raw2);
+        //remove html
+        $strx = strip_tags($raw3);
+        
+        //replace multiple consecutive spaces with one
+        $str = preg_replace('!\s+!', ' ', $strx);
+        
+        return $str;
+    }
+    
+    private function spellcheckURL($str, $language)
+    {
+        $spellchecker = Aspell::create();
+
         Log::info("before aspell");
-        $misspellings = $aspell->check($str, [$language->short_name], ['']);
+        $misspellings = $spellchecker->check($str, [$language->short_name], ['']);
         Log::info("after aspell");
         
         return $misspellings;
     }
     
+    
+    
+    private function grammarcheckURL($str, $language)
+    {
+        Log::info("before languagetool");
+        
+        $url = "http://localhost:8081/v2/check?language=" . $language->short_name . "&text=" . urlencode($str);
+        Log::info($url);
+        
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $response = json_decode($response);
+        curl_close($ch);
+
+        $misspellings = array();
+                
+        $ignoredMessages=IgnoredLTMessage::all();  
+        Log::info("ignore: " . count($ignoredMessages));
+        
+        if ($response != null)
+        {
+            foreach($response->matches as $match)
+            {
+                if (!$this->arrayContainsValue($ignoredMessages, $match->message))
+                {
+                    $context= $match->context->text;
+                    $start = $match->context->offset;
+                    $length =  $match->context->length;
+                    $word=$this->findCompleteWord($context, $start, $length);
+                    Log::info( $word);
+                    Log::info( $match->message);
+                    Log::info( $match->context->text);
+                    Log::info( $match->context->offset . " " . $start . " " .  $match->context->length . " " . $length);
+                    $ms = new TMisspelling($word, $match->offset, 0, [$match->message], [$match->context->text]);
+                        
+                    array_push($misspellings, $ms);
+                }
+            }
+        }
+        
+        return $misspellings;
+    }
+    
+    private function findCompleteWord($context, $start, $length)
+    {
+        $origStart=$start;
+        $foundSpace=false;
+        while (!$foundSpace)
+        {
+            if (substr($context, $start, 1) == " ")
+                $foundSpace = true;
+                else
+                    $start--;
+                    
+                    if ($start == 0)
+                        $foundSpace = true;
+        }
+        $foundSpace=false;
+        while (!$foundSpace)
+        {
+            if (substr($context, $origStart + $length, 1) == " ")
+                $foundSpace = true;
+                else
+                    $length++;
+                    
+                    if ($length + $origStart == strlen($context))
+                        $foundSpace = true;
+        }
+        $word=substr($context, $start, $origStart-$start+$length);
+        
+        return $word;
+    }
+    
+    
+    private function arrayContainsValue($array, $value)
+    {
+        $found = false;
+        
+        foreach($array as $message)
+        {
+//            Log::info("!" . $value . "!");
+//            Log::info("#" . $message->message . "#");
+            if($message->message == $value)
+                $found = true;
+        }
+        
+//        Log::info("message " . $value . " ignore: " . json_encode($found));
+        
+        return $found;
+    }
+    /*
     private function extractLinks($html)
     {
         $linkArray = array();
@@ -240,5 +402,5 @@ class SpellcheckBackgroundJob implements ShouldQueue
         }
         return $linkArray;
     }
-    
+    */
 }

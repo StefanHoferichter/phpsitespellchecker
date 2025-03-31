@@ -14,8 +14,20 @@
 
         <br><br>
         <table>
+            <tr  class="tableheader"><td>Word</td><td>Line</td><td>Offset</td><td>Message</td><td>Context</td></tr>
             @foreach($misspellings as $misspelling) 
-              <tr><td>{{ $misspelling->word }}</td><td>{{ $misspelling->line }}</td><td>{{$misspelling->offset}}</td><td><a href="/add_word_to_dict/{{$misspelling->id}}/{{$page->id}}">Add to Dictionary</a></td><td><a href="/add_word_to_ignored/{{$misspelling->id}}/{{$page->id}}">Add to Ignored</a></td></tr>
+              @if ($loop->index % 2 == 0)
+              	<tr class="evenrow">
+              @else
+              	<tr>
+              @endif	
+				<td>{{ $misspelling->word }}</td><td>{{ $misspelling->line }}</td><td>{{$misspelling->offset}}</td><td>{{$misspelling->message}}</td><td>{{$misspelling->context}}</td>
+              @if ($tool_id == 1)
+              	<td><a href="/add_word_to_dict/{{$misspelling->id}}/{{$page->id}}">Add to Dictionary</a></td><td><a href="/add_word_to_ignored/{{$misspelling->id}}/{{$page->id}}">Add to Ignored</a></td>
+              @else	
+              	<td><a href="/add_message_to_ignored/{{urlencode($misspelling->message)}}/{{$page->id}}">Add to Ignored LT Messages</a></td>
+              @endif	
+              	</tr>
             @endforeach
         </table>
         

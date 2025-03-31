@@ -11,9 +11,14 @@
 <br>
 
         <table>
-            <tr><td>Orig</td><td>URL</td><td>Misspellings</td><td>Preview</td></tr>
+            <tr class="tableheader"><td>Orig</td><td>URL</td><td>Misspellings</td><td>Preview</td></tr>
             @foreach($pages as $page) 
-              <tr><td><a href="{{$page->url}}" target="_blank">Orig</a></td><td><a href="/show_page_detail/{{$page->id}}">{{ $page->url }}</a></td><td>{{ $page->misspellings }}</td><td>{{$page->preview}}</td></tr>
+              @if ($loop->index % 2 == 0)
+              	<tr class="evenrow">
+              @else
+              	<tr>
+              @endif	
+				<td><a href="{{$page->url}}" target="_blank">Orig</a></td><td><a href="/show_page_detail/{{$page->id}}">{{ $page->url }}</a></td><td>{{ $page->misspellings }}</td><td>{{$page->preview}}</td></tr>
             @endforeach
         </table>
         

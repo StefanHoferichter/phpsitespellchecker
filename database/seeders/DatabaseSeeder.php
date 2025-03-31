@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
         
         $this->call([
             LanguageSeeder::class,
+        ]); 
+        $this->call([
+            ToolSeeder::class,
         ]);
         $this->call([
             ProjectsSeeder::class,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\IgnoredWord;
+use App\Models\IgnoredLTMessage;
 use App\Models\Language;
 use App\Models\Misspelling;
 use App\Models\Page;
@@ -163,8 +164,10 @@ class DictionariesController extends Controller
         $word->language_id=$language_ids[0]->language_id;
         $word->name=$misspelling->word;
         $word->save();
+
+        $tool_id=SpellController::getToolIdFromPageId($page_id);
         
-        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page]);
+        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page, 'tool_id' => $tool_id]);
     }
     
     public function addWordToIgnored($id, $page_id)
@@ -177,8 +180,24 @@ class DictionariesController extends Controller
         $word=new IgnoredWord();
         $word->name=$misspelling->word;
         $word->save();
+
+        $tool_id=SpellController::getToolIdFromPageId($page_id);
         
-        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page]);
+        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page, 'tool_id' => $tool_id]);
+    }
+
+    public function addMessageToIgnored($message, $page_id)
+    {
+        $misspellings = DB::select('select * from misspellings where page_id = ?', [$page_id]);
+        $page = Page::find($page_id);
+        
+        $msg=new IgnoredLTMessage();
+        $msg->message=urldecode($message);
+        $msg->save();
+        
+        $tool_id=SpellController::getToolIdFromPageId($page_id);
+                
+        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page, 'tool_id' => $tool_id]);
     }
     
     

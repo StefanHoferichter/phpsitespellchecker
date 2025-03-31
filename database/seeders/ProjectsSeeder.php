@@ -13,9 +13,16 @@ class ProjectsSeeder extends Seeder
     public function run(): void
     {
         DB::table('projects')->insert([
-            'title' => 'Hoferichter.net',
+            'title' => 'Hoferichter.net - Aspell',
             'sitemap' => 'https://www.hoferichter.net/sitemap.xml',
             'language_id' => '1',
+            'tool_id' => '1',
+        ]);
+        DB::table('projects')->insert([
+            'title' => 'Hoferichter.net - LanguageTool',
+            'sitemap' => 'https://www.hoferichter.net/sitemap.xml',
+            'language_id' => '1',
+            'tool_id' => '2',
         ]);
     }
 }

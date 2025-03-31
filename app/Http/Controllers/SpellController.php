@@ -30,11 +30,12 @@ class SpellController extends Controller
     public function triggerJob(Request $request)
     {
         Log::info("adhoc: ". $request->adhoc);
-        echo("adhoc: ". $request->adhoc);
         $sc = new SpellcheckJob();
         $sc->project_id = $request->project_id;
         $sc->status = "Q";
         $sc->save();
+
+//        $sc->check_type = $request->check_type;
         
         if ($request->adhoc == "true")
             SpellcheckBackgroundJob::dispatchSync($sc);
@@ -48,7 +49,6 @@ class SpellController extends Controller
     {
         $pages = DB::select('select * from pages where spellcheck_job_id = ?', [$id]);
         
-        
         return view('pages_list', ['pages' => $pages]);
     }
     
@@ -56,10 +56,12 @@ class SpellController extends Controller
     public function showPageDetails($id)
     {
         $misspellings = DB::select('select * from misspellings where page_id = ?', [$id]);
+
+        $tool_id=$this->getToolIdFromPageId($id);
         
         $page = Page::find($id);
         
-        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page]);
+        return view('misspellings_list', ['misspellings' => $misspellings, 'page' => $page, 'tool_id' => $tool_id]);
     }
     
     
@@ -70,6 +72,13 @@ class SpellController extends Controller
         return $this->showJobs();
     }
 
+    public static function getToolIdFromPageId($id)
+    {
+        $tool_ids = DB::select('select pr.tool_id from pages pa, spellcheck_jobs j, projects pr where j.project_id=pr.id and pa.spellcheck_job_id=j.id and pa.id = ?', [$id]);
+        
+        return $tool_ids[0]->tool_id;
+    }
+    
     //-------api ---------------
     
     public function getJobStatus()
