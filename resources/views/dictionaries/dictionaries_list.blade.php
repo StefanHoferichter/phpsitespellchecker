@@ -11,8 +11,14 @@
 
         <br><br>
         <table>
+            <tr class="tableheader"><td>ID</td><td>Language</td></tr>
             @foreach($languages as $language) 
-              <tr><td>{{ $language->id }}</td><td><a href="/show_words/{{$language->id}}">{{ $language->long_name }}</td></tr>
+              @if ($loop->index % 2 == 0)
+              	<tr class="evenrow">
+              @else
+              	<tr>
+              @endif	
+				<td>{{ $language->id }}</td><td><a href="/show_words/{{$language->id}}">{{ $language->long_name }}</td></tr>
             @endforeach
         </table>
         

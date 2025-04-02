@@ -17,8 +17,14 @@
         <br><br>
         
         <table>
+			<tr class="tableheader"><td>ID</td><td>Word</td></tr>
             @foreach($words as $word) 
-              <tr><td>{{ $word->id }}</td><td>{{ $word->name }}</td><td><a href="/edit_word/{{$word->id}}">Edit</td><td><a href="/delete_word/{{$word->id}}">Delete</td></tr>
+              @if ($loop->index % 2 == 0)
+              	<tr class="evenrow">
+              @else
+              	<tr>
+              @endif	
+			  <td>{{ $word->id }}</td><td>{{ $word->name }}</td><td><a href="/edit_word/{{$word->id}}">Edit</td><td><a href="/delete_word/{{$word->id}}">Delete</td></tr>
             @endforeach
         </table>
         
