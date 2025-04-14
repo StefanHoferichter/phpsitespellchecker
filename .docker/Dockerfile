@@ -31,6 +31,9 @@ COPY .docker/laravel-worker.conf /etc/supervisor/conf.d
 COPY .docker/de-neu.multi /usr/lib/aspell
 COPY .docker/en.multi /usr/lib/aspell
 
+RUN chmod -R 777 .docker/start.sh
+RUN chmod -R 777 .docker/completeinstall.sh
+
 # Install PHP extensions.
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql
@@ -55,8 +58,6 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 RUN chmod -R 777 storage
 RUN chmod -R 777 dict
-RUN chmod -R 777 .docker/start.sh
-RUN chmod -R 777 .docker/completeinstall.sh
 
 
 RUN php artisan key:generate
