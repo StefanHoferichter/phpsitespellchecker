@@ -54,6 +54,10 @@ RUN composer install --no-interaction --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 RUN chmod -R 777 storage
+RUN chmod -R 777 dict
+RUN chmod -R 777 .docker/start.sh
+RUN chmod -R 777 .docker/completeinstall.sh
+
 
 RUN php artisan key:generate
 
@@ -62,7 +66,6 @@ EXPOSE 80
 
 RUN mv vendor /tmp/vendor
 
-# Start Apache web server.
-#CMD ["apache2-foreground"]
+# Start Apache web server supervisor and some final steps.
 CMD [".docker/start.sh"]
 
