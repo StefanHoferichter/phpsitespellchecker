@@ -1,0 +1,3 @@
+add de-common.rws
+add de_DE-only.rws
+add /var/www/html/phpsitespellchecker/dict/custom_de.rws
