@@ -25,8 +25,8 @@ RUN a2enmod rewrite
 # Set the Apache document root
 ENV APACHE_DOCUMENT_ROOT /var/www/html/phpsitespellchecker
 
-COPY --chmod==777 .docker/start.sh /tmp
-COPY --chmod==777 .docker/completeinstall.sh /tmp
+COPY --chmod=777 .docker/start.sh /tmp
+COPY --chmod=777 .docker/completeinstall.sh /tmp
 
 # Update the default Apache site configuration
 COPY .docker/apache-config.conf /etc/apache2/sites-available/000-default.conf
