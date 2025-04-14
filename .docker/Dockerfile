@@ -25,14 +25,14 @@ RUN a2enmod rewrite
 # Set the Apache document root
 ENV APACHE_DOCUMENT_ROOT /var/www/html/phpsitespellchecker
 
+RUN chmod 777 .docker/start.sh
+RUN chmod 777 .docker/completeinstall.sh
+
 # Update the default Apache site configuration
 COPY .docker/apache-config.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/laravel-worker.conf /etc/supervisor/conf.d
 COPY .docker/de-neu.multi /usr/lib/aspell
 COPY .docker/en.multi /usr/lib/aspell
-
-RUN chmod -R 777 .docker/start.sh
-RUN chmod -R 777 .docker/completeinstall.sh
 
 # Install PHP extensions.
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
