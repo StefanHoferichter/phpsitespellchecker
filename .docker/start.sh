@@ -1,3 +1,4 @@
+cd /var/www/html/phpsitespellchecker
 cp -a /tmp/vendor /var/www/html/phpsitespellchecker
 composer require tigitz/php-spellchecker
 service supervisor start
