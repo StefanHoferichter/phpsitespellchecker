@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite
 
 # Set the Apache document root
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT /var/www/html/phpsitespellchecker
 
 # Update the default Apache site configuration
 COPY .docker/apache-config.conf /etc/apache2/sites-available/000-default.conf
