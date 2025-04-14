@@ -305,7 +305,7 @@ class SpellcheckBackgroundJob implements ShouldQueue
     {
         Log::info("before languagetool");
         
-        $url = "http://localhost:8081/v2/check?language=" . $language->short_name . "&text=" . urlencode($str);
+        $url = config('dict.languagetool_url') . ":8081/v2/check?language=" . $language->short_name . "&text=" . urlencode($str);
         Log::info($url);
         
         $ch = curl_init($url);
