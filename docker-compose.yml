@@ -41,5 +41,17 @@ services:
     networks:
       - psss-net
 
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: psss-mysql
+      MYSQL_ROOT_PASSWORD: psss
+    ports:
+      - "8082:80"
+      
 networks:
   psss-net:
