@@ -47,8 +47,6 @@ WORKDIR /var/www/html/phpsitespellchecker
 # Copy the Laravel application files into the container.
 COPY . .
 
-COPY .docker/.env /var/www/html/phpsitespellchecker
-
 # Install Laravel dependencies using Composer.
 RUN composer install --no-interaction --optimize-autoloader
 

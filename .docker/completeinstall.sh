@@ -2,7 +2,7 @@ echo "changing working directory"
 cd /var/www/html/phpsitespellchecker
 
 echo "copying .env file"
-cp .docker/.env .
+cp .docker/.env.sample ./.env
 
 echo "set permissions"
 
