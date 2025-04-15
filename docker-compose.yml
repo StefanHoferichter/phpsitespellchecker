@@ -50,8 +50,12 @@ services:
     environment:
       PMA_HOST: psss-mysql
       MYSQL_ROOT_PASSWORD: psss
+      PMA_USER: psss
+      PMA_PASSWORD: psss
     ports:
       - "8082:80"
+    networks:
+      - psss-net
       
 networks:
   psss-net:
