@@ -4,8 +4,10 @@ cd /var/www/html/phpsitespellchecker
 echo "copying .env file"
 cp .docker/.env.sample ./.env
 
-echo "set permissions"
+echo "generate key"
+php artisan key:generate
 
+echo "set permissions"
 chown -R www-data:www-data dict storage
 chmod -R 777 storage
 chmod -R 777 dict

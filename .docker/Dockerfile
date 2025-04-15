@@ -50,16 +50,6 @@ COPY . .
 # Install Laravel dependencies using Composer.
 RUN composer install --no-interaction --optimize-autoloader
 
-
-# Set permissions for Laravel.
-RUN chown -R www-data:www-data storage bootstrap/cache
-
-RUN chmod -R 777 storage
-RUN chmod -R 777 dict
-
-
-RUN php artisan key:generate
-
 # Expose port 80 for Apache.
 EXPOSE 80
 
