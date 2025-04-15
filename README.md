@@ -27,4 +27,4 @@ PHPSiteSpellChecker is a Laravel app.
 
 # Installation
 
-The installation guide can be found at: https://www.hoferichter.net/en/psss/phpsitespellchecker.php
+The installation guide can be found at: https://www.hoferichter.net/en/psss/phpsitespellchecker.php. There is also a Docker image available. Please see: https://www.hoferichter.net/en/psss/psss_installation_guide_docker.php.
